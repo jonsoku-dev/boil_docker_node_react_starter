@@ -3,6 +3,9 @@ require("./src/db/mongoose");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
+app.use(express.json({ extends: false }));
+
 app.get("/", (req, res) => res.send("API RUNNiNG ..."));
 
 // @@ Routes
