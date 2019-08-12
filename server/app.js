@@ -1,9 +1,10 @@
 const express = require("express");
 require("./src/db/mongoose");
 const app = express();
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
-app.listen(port, () => {
-  console.log("Server is up on port " + port);
+app.get("/", (req, res) => res.send("API RUNNiNG ..."));
+
+app.listen(PORT, () => {
+  console.log(`Server is up on PORT ${PORT}`);
 });
