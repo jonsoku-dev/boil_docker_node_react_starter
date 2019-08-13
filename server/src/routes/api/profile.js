@@ -3,25 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const auth = require("../../middleware/auth");
 const Profile = require("../../models/Profile");
-
-// @route   GET api/profile/me
-// @desc    Get current users profile
-// @access  Private
-router.get("/me", auth, async (req, res) => {
-  try {
-    const profile = await Profile.findOne({ user: req.user.id }).populate("user", [
-      "name",
-      "avatar"
-    ]);
-    if (!profile) {
-      return res.status(400).json({ msg: "There is no profile for this user" });
-    }
-    res.json(profile);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error!");
-  }
-});
+const User = require("../../models/User");
 
 // @route   POST api/profile
 // @desc    Create or Update user profile
@@ -100,6 +82,137 @@ router.post(
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server error!");
+    }
+  }
+);
+
+// @route   GET api/profile/me
+// @desc    Get current users profile
+// @access  Private
+router.get("/me", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id }).populate("user", [
+      "name",
+      "avatar"
+    ]);
+    if (!profile) {
+      return res.status(400).json({ msg: "There is no profile for this user" });
+    }
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error!");
+  }
+});
+
+// @route   GET api/profile
+// @desc    GET all profiles
+// @access  Public
+router.get("/", async (req, res) => {
+  try {
+    //populate : 관계 (relationship!)
+    // user : model에 정의한 ref로 찾는듯
+    // [] : 배열안에는 컬럼명!
+    // 이걸 Profile 데이터테이블에 끼워넣는다
+    const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error!");
+  }
+});
+
+// @route   GET api/profile/user/:user_id
+// @desc    GET profile by user ID
+// @access  Public
+router.get("/user/:user_id", async (req, res) => {
+  try {
+    //populate : 관계 (relationship!)
+    // user : model에 정의한 ref로 찾는듯
+    // [] : 배열안에는 컬럼명!
+    // 이걸 Profile 데이터테이블에 끼워넣는다
+
+    //profile model 안에는 user가 있으므로,, user(objectId)로 찾으면 됨 !
+    const profile = await Profile.findOne({ user: req.params.user_id }).populate("user", [
+      "name",
+      "avatar"
+    ]);
+    if (!profile) {
+      return res.status(400).json({ msg: "유저의 프로필이 존재하지 않습니다." });
+    }
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === "ObjectId") {
+      console.log(err.kind);
+      return res.status(400).json({ msg: "유저의 프로필이 존재하지 않습니다." });
+    }
+  }
+});
+
+// @route   DELETE api/profile
+// @desc    Delete profile, user & posts
+// @access  Private
+router.delete("/", auth, async (req, res) => {
+  // @todo - remove users posts
+
+  // Remove profile
+  await Profile.findOneAndRemove({ user: req.user.id });
+  // Remove user
+  await User.findOneAndRemove({ _id: req.user.id });
+
+  res.json({ msg: "User deleted" });
+});
+
+// @route   PUT api/profile/experience
+// @desc    Add profile experience
+// @access  Private
+router.put(
+  "/experience",
+  [
+    auth,
+    [
+      check("title", "Title is required")
+        .not()
+        .isEmpty(),
+      check("company", "company is required")
+        .not()
+        .isEmpty(),
+      check("from", "from  date is required")
+        .not()
+        .isEmpty()
+    ]
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { title, company, location, from, to, current, description } = req.body;
+
+    const newExp = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description
+    };
+
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      // experience 는 배열이다.
+      // unshift는 배열의 앞부분에 밀어넣는것.
+      profile.experience.unshift(newExp);
+
+      await profile.save();
+
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error!");
     }
   }
 );
