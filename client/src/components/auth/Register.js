@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { setAlert } from "../../store/actions/alert";
 import { register } from "../../store/actions/auth";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const Register = ({ setAlert, register }) => {
+const Register = ({ setAlert, register, isAuth }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,7 +20,7 @@ const Register = ({ setAlert, register }) => {
       [e.target.name]: e.target.value
     });
 
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
     e.preventDefault();
     if (password !== password2) {
       setAlert("패스워드가 일치하지 않습니다.", "danger");
@@ -28,6 +28,10 @@ const Register = ({ setAlert, register }) => {
       register({ name, email, password });
     }
   };
+
+  if (isAuth) {
+    return <Redirect to="/dashboard" />;
+  }
 
   return (
     <>
@@ -86,10 +90,15 @@ const Register = ({ setAlert, register }) => {
 
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
-  register: PropTypes.func.isRequired
+  register: PropTypes.func.isRequired,
+  isAuth: PropTypes.bool
 };
 
+const mapStateToProps = state => ({
+  isAuth: state.auth.isAuth
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { setAlert, register }
 )(Register);
