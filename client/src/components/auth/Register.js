@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { setAlert } from "../../store/actions/alert";
+import { register } from "../../store/actions/auth";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +25,7 @@ const Register = ({ setAlert }) => {
     if (password !== password2) {
       setAlert("패스워드가 일치하지 않습니다.", "danger");
     } else {
-      console.log("Success");
+      register({ name, email, password });
     }
   };
 
@@ -84,10 +85,11 @@ const Register = ({ setAlert }) => {
 };
 
 Register.propTypes = {
-  setAlert: PropTypes.func.isRequired
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired
 };
 
 export default connect(
   null,
-  { setAlert }
+  { setAlert, register }
 )(Register);
