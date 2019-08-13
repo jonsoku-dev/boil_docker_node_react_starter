@@ -23,4 +23,5 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
+// mongoose.model("user", UserSchema) : 나중에 ref를 user로 사용할때 쓴다.
 module.exports = User = mongoose.model("user", UserSchema);

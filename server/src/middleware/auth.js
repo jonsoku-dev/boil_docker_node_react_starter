@@ -12,6 +12,7 @@ module.exports = function(req, res, next) {
   //Verify token
   try {
     const decoded = jwt.verify(token, "jong");
+    console.log(decoded, "middleware/auth.js");
     req.user = decoded.user;
     next();
   } catch (err) {

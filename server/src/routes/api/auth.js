@@ -9,7 +9,7 @@ const User = require("../../models/User");
 
 // @route   GET api/auth
 // @desc    Test route
-// @access  Public
+// @access  Private
 router.get("/", auth, async (req, res) => {
   try {
     // .select("-password") : password는 보여주지않겠다 (-)
