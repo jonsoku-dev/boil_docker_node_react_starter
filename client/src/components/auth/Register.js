@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { setAlert } from "../../store/actions/alert";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import PropTypes from "prop-types";
 
-const Register = () => {
+const Register = ({ setAlert }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,25 +22,9 @@ const Register = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      console.log("Password do not match");
+      setAlert("패스워드가 일치하지 않습니다.", "danger");
     } else {
-      const newUser = {
-        name,
-        email,
-        password
-      };
-      try {
-        const config = {
-          headers: {
-            "Content-type": "application/json"
-          }
-        };
-        const body = JSON.stringify(newUser);
-        const res = await axios.post("/api/users", body, config);
-        console.log(res.data);
-      } catch (err) {
-        console.error(err.response.data);
-      }
+      console.log("Success");
     }
   };
 
@@ -97,4 +83,11 @@ const Register = () => {
   );
 };
 
-export default Register;
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired
+};
+
+export default connect(
+  null,
+  { setAlert }
+)(Register);

@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Landing, Navbar } from "./components/layout";
+import { Landing, Navbar, Alert } from "./components/layout";
 import { Register, Login } from "./components/auth";
 // Redux
 import { Provider } from "react-redux";
@@ -15,6 +15,7 @@ function App() {
           <Navbar />
           <Route exact path="/" component={Landing} />
           <section className="container">
+            <Alert />
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
