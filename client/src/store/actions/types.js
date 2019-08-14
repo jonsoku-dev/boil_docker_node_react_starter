@@ -21,3 +21,14 @@ export const PROFILE_ERROR = "PROFILE_ERROR";
 export const UPDATE_PROFILE = "UPDATE_PROFILE";
 // 계정삭제
 export const DELETE_ACCOUNT = "DELETE_ACCOUNT";
+//포스트
+export const GET_POSTS = "GET_POSTS";
+export const POST_ERROR = "POST_ERROR";
+export const ADD_POST = "ADD_POST";
+export const DELETE_POST = "DELETE_POST";
+export const GET_POST = "GET_POST";
+//포스트 - likes / unlikes
+export const UPDATE_LIKES = "UPDATE_LIKES";
+//포스트 - comment
+export const ADD_COMMENT = "ADD_COMMENT";
+export const REMOVE_COMMENT = "REMOVE_COMMENT";

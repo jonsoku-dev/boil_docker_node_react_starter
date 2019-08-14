@@ -13,6 +13,8 @@ import { Dashboard } from "./components/dashboard";
 import { CreateProfile, EditProfile, AddExp, AddEdu } from "./components/profile-form";
 import { Profiles } from "./components/profiles";
 import { Profile } from "./components/profile";
+import { Posts } from "./components/posts";
+import { Post } from "./components/post";
 
 // 토큰이 있으면 로그인을 유지시킨다. (껐다 껐을때..)
 if (localStorage.token) {
@@ -41,6 +43,8 @@ const App = () => {
               <PrivateRoute exact path="/edit-profile" component={EditProfile} />
               <PrivateRoute exact path="/add-experience" component={AddExp} />
               <PrivateRoute exact path="/add-education" component={AddEdu} />
+              <PrivateRoute exact path="/posts" component={Posts} />
+              <PrivateRoute exact path="/posts/:id" component={Post} />
             </Switch>
           </section>
         </>
