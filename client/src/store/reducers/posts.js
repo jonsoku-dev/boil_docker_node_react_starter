@@ -64,7 +64,7 @@ export default function(state = initialState, action) {
         // 6. 일단 기존 post를 복사하고, likes 부분에 actions에서 넘어온 payload.likes를 넣는다.
         // 7. (else) 아니라면 그냥 post 그대로 !
         posts: state.posts.map(post =>
-          post._id === payload.id ? { ...post, likes: payload.likes } : post
+          post._id === payload.postId ? { ...post, likes: payload.likes } : post
         ),
         loading: false
       };

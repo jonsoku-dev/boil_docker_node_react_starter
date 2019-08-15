@@ -20,6 +20,7 @@ export const getPosts = () => async dispatch => {
       payload: res.data
     });
   } catch (err) {
+    dispatch(setAlert(err.response.data.msg, "danger"));
     dispatch({
       type: POST_ERROR,
       //요 msg는 server에서 에러나면 항상 던져주던 그 err
@@ -39,6 +40,7 @@ export const addLike = postId => async dispatch => {
       payload: { postId, likes: res.data }
     });
   } catch (err) {
+    dispatch(setAlert(err.response.data.msg, "danger"));
     dispatch({
       type: POST_ERROR,
       //요 msg는 server에서 에러나면 항상 던져주던 그 err
@@ -58,6 +60,7 @@ export const removeLike = postId => async dispatch => {
       payload: { postId, likes: res.data }
     });
   } catch (err) {
+    dispatch(setAlert(err.response.data.msg, "danger"));
     dispatch({
       type: POST_ERROR,
       //요 msg는 server에서 에러나면 항상 던져주던 그 err
@@ -76,6 +79,7 @@ export const deletePost = postId => async dispatch => {
     });
     dispatch(setAlert("포스트를 삭제했습니다", "success"));
   } catch (err) {
+    dispatch(setAlert(err.response.data.msg, "danger"));
     dispatch({
       type: POST_ERROR,
       //요 msg는 server에서 에러나면 항상 던져주던 그 err
@@ -145,6 +149,8 @@ export const addComment = (postId, formData) => async dispatch => {
     });
     dispatch(setAlert("댓글이 작성되었습니다.", "success"));
   } catch (err) {
+    dispatch(setAlert(err.response.data.msg, "danger"));
+
     dispatch({
       type: POST_ERROR,
       //요 msg는 server에서 에러나면 항상 던져주던 그 err
@@ -157,7 +163,7 @@ export const addComment = (postId, formData) => async dispatch => {
 export const deleteComment = (postId, commentId) => async dispatch => {
   console.log(postId, commentId);
   try {
-    const res = await axios.delete(`/api/posts/${postId}/comment/${commentId}`);
+    await axios.delete(`/api/posts/${postId}/comment/${commentId}`);
     dispatch({
       type: REMOVE_COMMENT,
       // 일단 삭제하고,
@@ -167,6 +173,7 @@ export const deleteComment = (postId, commentId) => async dispatch => {
     });
     dispatch(setAlert("댓글이 작성되었습니다.", "success"));
   } catch (err) {
+    console.log(err);
     dispatch({
       type: POST_ERROR,
       //요 msg는 server에서 에러나면 항상 던져주던 그 err
